@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option go_package = "github.com/thinceller/next-graphql-grpc-sandbox/todo-app/proto";
+
+package todo;
+
+service TodoService {
+  rpc GetTodoList (TodoListRequest) returns (TodoList) {}
+  rpc GetTodoDetail (TodoDetailRequest) returns (TodoDetail) {}
+  rpc ToggleDone (ToggleDoneRequest) returns (ToggleDoneResponse) {}
+  rpc UpdateTodo (TodoDetail) returns (TodoDetail) {}
+  rpc DeleteTodo (TodoDetailRequest) returns (TodoDetail) {}
+}
+
+message TodoListRequest {
+}
+
+message Todo {
+  int32 id = 1;
+  string title = 2;
+  bool done = 4;
+}
+
+message TodoList {
+  repeated Todo todos = 1;
+}
+
+message TodoDetailRequest {
+  int32 id = 1;
+}
+
+message TodoDetail {
+  int32 id = 1;
+  string title = 2;
+  string content = 3;
+  bool done = 4;
+}
+
+message ToggleDoneRequest {
+  int32 id = 1;
+  bool done = 2;
+}
+
+message ToggleDoneResponse {
+  int32 id = 1;
+  bool done = 2;
+}
