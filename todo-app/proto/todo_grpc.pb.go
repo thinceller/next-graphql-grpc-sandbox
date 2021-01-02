@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -17,11 +18,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TodoServiceClient interface {
-	GetTodoList(ctx context.Context, in *TodoListRequest, opts ...grpc.CallOption) (*TodoList, error)
-	GetTodoDetail(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*TodoDetail, error)
-	ToggleDone(ctx context.Context, in *ToggleDoneRequest, opts ...grpc.CallOption) (*ToggleDoneResponse, error)
-	UpdateTodo(ctx context.Context, in *TodoDetail, opts ...grpc.CallOption) (*TodoDetail, error)
-	DeleteTodo(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*TodoDetail, error)
+	GetTodoList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TodoListResponse, error)
+	GetTodoDetail(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*TodoDetailResponse, error)
+	CreateTodo(ctx context.Context, in *CreateTodoRequest, opts ...grpc.CallOption) (*TodoDetailResponse, error)
+	UpdateTodo(ctx context.Context, in *TodoDetail, opts ...grpc.CallOption) (*TodoDetailResponse, error)
+	DeleteTodo(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type todoServiceClient struct {
@@ -32,8 +33,8 @@ func NewTodoServiceClient(cc grpc.ClientConnInterface) TodoServiceClient {
 	return &todoServiceClient{cc}
 }
 
-func (c *todoServiceClient) GetTodoList(ctx context.Context, in *TodoListRequest, opts ...grpc.CallOption) (*TodoList, error) {
-	out := new(TodoList)
+func (c *todoServiceClient) GetTodoList(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*TodoListResponse, error) {
+	out := new(TodoListResponse)
 	err := c.cc.Invoke(ctx, "/todo.TodoService/GetTodoList", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -41,8 +42,8 @@ func (c *todoServiceClient) GetTodoList(ctx context.Context, in *TodoListRequest
 	return out, nil
 }
 
-func (c *todoServiceClient) GetTodoDetail(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*TodoDetail, error) {
-	out := new(TodoDetail)
+func (c *todoServiceClient) GetTodoDetail(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*TodoDetailResponse, error) {
+	out := new(TodoDetailResponse)
 	err := c.cc.Invoke(ctx, "/todo.TodoService/GetTodoDetail", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,17 +51,17 @@ func (c *todoServiceClient) GetTodoDetail(ctx context.Context, in *TodoDetailReq
 	return out, nil
 }
 
-func (c *todoServiceClient) ToggleDone(ctx context.Context, in *ToggleDoneRequest, opts ...grpc.CallOption) (*ToggleDoneResponse, error) {
-	out := new(ToggleDoneResponse)
-	err := c.cc.Invoke(ctx, "/todo.TodoService/ToggleDone", in, out, opts...)
+func (c *todoServiceClient) CreateTodo(ctx context.Context, in *CreateTodoRequest, opts ...grpc.CallOption) (*TodoDetailResponse, error) {
+	out := new(TodoDetailResponse)
+	err := c.cc.Invoke(ctx, "/todo.TodoService/CreateTodo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *todoServiceClient) UpdateTodo(ctx context.Context, in *TodoDetail, opts ...grpc.CallOption) (*TodoDetail, error) {
-	out := new(TodoDetail)
+func (c *todoServiceClient) UpdateTodo(ctx context.Context, in *TodoDetail, opts ...grpc.CallOption) (*TodoDetailResponse, error) {
+	out := new(TodoDetailResponse)
 	err := c.cc.Invoke(ctx, "/todo.TodoService/UpdateTodo", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -68,8 +69,8 @@ func (c *todoServiceClient) UpdateTodo(ctx context.Context, in *TodoDetail, opts
 	return out, nil
 }
 
-func (c *todoServiceClient) DeleteTodo(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*TodoDetail, error) {
-	out := new(TodoDetail)
+func (c *todoServiceClient) DeleteTodo(ctx context.Context, in *TodoDetailRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/todo.TodoService/DeleteTodo", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,11 +82,11 @@ func (c *todoServiceClient) DeleteTodo(ctx context.Context, in *TodoDetailReques
 // All implementations must embed UnimplementedTodoServiceServer
 // for forward compatibility
 type TodoServiceServer interface {
-	GetTodoList(context.Context, *TodoListRequest) (*TodoList, error)
-	GetTodoDetail(context.Context, *TodoDetailRequest) (*TodoDetail, error)
-	ToggleDone(context.Context, *ToggleDoneRequest) (*ToggleDoneResponse, error)
-	UpdateTodo(context.Context, *TodoDetail) (*TodoDetail, error)
-	DeleteTodo(context.Context, *TodoDetailRequest) (*TodoDetail, error)
+	GetTodoList(context.Context, *emptypb.Empty) (*TodoListResponse, error)
+	GetTodoDetail(context.Context, *TodoDetailRequest) (*TodoDetailResponse, error)
+	CreateTodo(context.Context, *CreateTodoRequest) (*TodoDetailResponse, error)
+	UpdateTodo(context.Context, *TodoDetail) (*TodoDetailResponse, error)
+	DeleteTodo(context.Context, *TodoDetailRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedTodoServiceServer()
 }
 
@@ -93,19 +94,19 @@ type TodoServiceServer interface {
 type UnimplementedTodoServiceServer struct {
 }
 
-func (UnimplementedTodoServiceServer) GetTodoList(context.Context, *TodoListRequest) (*TodoList, error) {
+func (UnimplementedTodoServiceServer) GetTodoList(context.Context, *emptypb.Empty) (*TodoListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTodoList not implemented")
 }
-func (UnimplementedTodoServiceServer) GetTodoDetail(context.Context, *TodoDetailRequest) (*TodoDetail, error) {
+func (UnimplementedTodoServiceServer) GetTodoDetail(context.Context, *TodoDetailRequest) (*TodoDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTodoDetail not implemented")
 }
-func (UnimplementedTodoServiceServer) ToggleDone(context.Context, *ToggleDoneRequest) (*ToggleDoneResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ToggleDone not implemented")
+func (UnimplementedTodoServiceServer) CreateTodo(context.Context, *CreateTodoRequest) (*TodoDetailResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTodo not implemented")
 }
-func (UnimplementedTodoServiceServer) UpdateTodo(context.Context, *TodoDetail) (*TodoDetail, error) {
+func (UnimplementedTodoServiceServer) UpdateTodo(context.Context, *TodoDetail) (*TodoDetailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTodo not implemented")
 }
-func (UnimplementedTodoServiceServer) DeleteTodo(context.Context, *TodoDetailRequest) (*TodoDetail, error) {
+func (UnimplementedTodoServiceServer) DeleteTodo(context.Context, *TodoDetailRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTodo not implemented")
 }
 func (UnimplementedTodoServiceServer) mustEmbedUnimplementedTodoServiceServer() {}
@@ -122,7 +123,7 @@ func RegisterTodoServiceServer(s grpc.ServiceRegistrar, srv TodoServiceServer) {
 }
 
 func _TodoService_GetTodoList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TodoListRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -134,7 +135,7 @@ func _TodoService_GetTodoList_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/todo.TodoService/GetTodoList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TodoServiceServer).GetTodoList(ctx, req.(*TodoListRequest))
+		return srv.(TodoServiceServer).GetTodoList(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -157,20 +158,20 @@ func _TodoService_GetTodoDetail_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TodoService_ToggleDone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ToggleDoneRequest)
+func _TodoService_CreateTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTodoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TodoServiceServer).ToggleDone(ctx, in)
+		return srv.(TodoServiceServer).CreateTodo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/todo.TodoService/ToggleDone",
+		FullMethod: "/todo.TodoService/CreateTodo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TodoServiceServer).ToggleDone(ctx, req.(*ToggleDoneRequest))
+		return srv.(TodoServiceServer).CreateTodo(ctx, req.(*CreateTodoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -227,8 +228,8 @@ var TodoService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TodoService_GetTodoDetail_Handler,
 		},
 		{
-			MethodName: "ToggleDone",
-			Handler:    _TodoService_ToggleDone_Handler,
+			MethodName: "CreateTodo",
+			Handler:    _TodoService_CreateTodo_Handler,
 		},
 		{
 			MethodName: "UpdateTodo",
